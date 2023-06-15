@@ -1,11 +1,10 @@
-# bc_linux_project
+# bc_linux_network_project
 BeCode Linux Module - Linux Project
 
-## Project context
+## Project Context
 
 The local library in your little town has no funding for Windows licenses so the director is considering Linux. Some users are sceptical and ask for a demo. The local IT company where you work is taking up the project and you are in charge of setting up a server and a workstation.
 To demonstrate this setup, you will use virtual machines and an internal virtual network (your DHCP must not interfere with the LAN).
-
 
 You may propose any additional functionality you consider interesting.
 
@@ -33,39 +32,203 @@ Set up the following Linux infrastructure:
     - **Optional**
         1. Propose and implement a solution to remotely help a user
 
-# workstation vm setup
+# Workstation VM Setup
 
-## introduction
-setting up a debian graphical workstation vm for the linux project
+We'll setup a debian virtual machine with a graphical desktop environment using VirtualBox.
 
-## steps
+## Steps
 
-### creating the new vm
+### **1. Creating the New VM**
 
-### installing linux on the vm
+First we need a debian ISO, you can get yours [here](https://www.debian.org/distrib/), I will be using the latest release, debian 12.
 
-### setting up the vm
+Once the ISO downloaded, we can set up the new VM on VirtualBox.
 
-IF YOUR USER IS NOT IN THE SUDOERS GROUP, ADD IT
+Click on "NEW", fill out the name, select the ISO you just downloaded and check "Skip Unattended Installation".
 
->su root
->sudo usermod -aG sudo [your username]
->exit
+![](images/vm-creation-1.png)
 
-restart your vm
+Allocate at least 2048MB of RAM and 2 CPU cores since we're gonna run a desktop environment on it.
+
+Allocate 30GB of hard drive space or more.
+
+Finish.
+
+---
+
+### **2. Installing Linux on the VM**
+
+A basic linux installation, I will choose the "Install" option, it's more convenient for me than the gaphical install.
+
+Select your language.
+
+Select your location.
+
+Configure the keyboard.
+
+Wait.
+
+Configure the network, I will go with the "workstation" hostname and domain name.
+
+I choose "root" as default password. (security number one priority)
+
+"workstation" for the full name and username, "root" as password. (lol)
+
+Wait, then for the partition use the entire disk, select the disk and <ins>__make sure to separate the /home partition__</ins>, then finish partitioning and write the changes to the disk.
+
+Wait.
+
+Don't scan for the extra installation media, select your mirror country, deb.debian.org as the archive and no proxy.
+
+Participate in the package survey if you wish.
+
+<ins>__For the Software Selection, select Debian desktop environment and select the environment that you like. I will be choosing GNOME and don't forget to tick SSH aswell__</ins> (spacebar to select and deselect)
+
+![](images/vm-creation-2.png)
+
+---
+
+### **3. Setting Up the VM**
+
+Once your machine is turned on, the first thing we have to do is add your user to the sudoers.
+
+```sh
+su root
+```
+```sh
+sudo usermod -aG sudo YOUR_USERNAME
+```
+```sh
+exit
+```
+Restart your VM
 
 -----------------------------------------
 
-IF YOU HAVE THE "Media change: please insert the disc labeled ... in the drive /media/cdrom"
+We'll start installing the consumer software.
 
-it can happen if you fed your machine the CD or DVD version of the iso
+[Libre Office](https://www.libreoffice.org/)
+LibreOffice is installed by default on most popular linux distributions, but if it isn't on yours, type
+```sh
+sudo apt install libreoffice
+```
 
-then you need to update your sources list
+[GIMP](https://www.gimp.org/)
+```sh
+sudo apt install gimp
+```
 
->sudo nano /etc/apt/sources.list
+[MULLVAD Browser](https://mullvad.net/en/download/browser/linux)
 
-delete or comment (#) the CDROM source and paste this:
 
+```sh
+cd Downloads
+```
+```sh
+tar xf mullvad-browser-linux64-[YOUR_VERSION].tar.xf
+```
+```sh
+rm mullvad-browser-linux64-[YOUR_VERSION].tar.xf
+```
+```sh
+mv mullvad-browser ~/
+```
+```sh
+cd
+```
+```sh
+cd mullvad-browser
+```
+```sh
+./start-mullvad-browser-desktop --register-app
+```
+
+Now you have mullvad browser registered in your applications
+
+---
+
+We'll also set up the remote help straight away since it's just some more installs.
+
+To be able to remotely connect to a user, we'll use xrdp ([RDP](https://en.wikipedia.org/wiki/Remote_Desktop_Protocol) stands for Remote Desktop Protocol)
+
+
+```sh
+sudo apt update
+```
+```sh
+sudo apt install xrdp
+```
+```sh
+sudo systemctl status xrdp
+```
+
+If it's not running, enable it
+```sh
+sudo systemctl enable --now xrdp
+```
+
+Add the xrdp user to the ssl-cert group
+```sh
+sudo adduser xrdp ssl-cert
+```
+
+Restart the xrdp server
+```sh
+sudo systemctl restart xrdp
+```
+
+We can also install Remmina to be able to help a user from another workstation
+install remmina
+
+```sh
+sudo apt install remmina
+```
+
+We can already set up the Uncomplicated Firewall for the future and allow the RDP port
+
+```sh
+sudo apt install ufw
+```
+```sh
+sudo ufw allow 3389
+```
+```sh
+sudo ufw enable
+```
+
+-----------------------------------------
+
+We'll try to remotely connect to another machine, for that we need to change our VM's network type and set it to Bridged
+
+Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter
+
+![](images/vm-bridged-network.png)
+
+You can now remotely connect to your workstation from another machine on the network
+
+To know your workstation's ip
+```sh
+ip a
+```
+
+It will probably be something like 10.40.X.X
+
+<ins>__You cannot remotely into a machine with an ongoing session with xrdp, either create a guest user or logout__</ins>
+
+-----------------------------------------
+
+### Encoutered problems
+
+<ins>__"Media change: please insert the disc labeled ... in the drive /media/cdrom"__</ins>
+
+It can happen if you fed your machine the CD or DVD version of the ISO, to fix it you need to update your souces list.
+
+```sh
+sudo nano /etc/apt/sources.list
+```
+
+Delete or comment (#) the CDROM source and paste this:
+```
 deb http://deb.debian.org/debian bookworm main non-free-firmware
 deb-src http://deb.debian.org/debian bookworm main non-free-firmware
 
@@ -74,90 +237,17 @@ deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-f
 
 deb http://deb.debian.org/debian bookworm-updates main non-free-firmware
 deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware
+```
 
-and run 
->sudo apt update
-
------------------------------------------
-
-INSTALL CONSUMER PROGRAMS
-
-[Libre Office](https://www.libreoffice.org/)
-LibreOffice is installed by default on most popular linux distributions, but if it isn't on yours, type
->sudo apt install libreoffice
-
-[GIMP](https://www.gimp.org/)
->sudo apt install gimp
-
-[MULLVAD Browser](https://mullvad.net/en/download/browser/linux)
-
->cd Downloads
->tar xf mullvad-browser-linux64-[YOUR_VERSION].tar.xf
->rm mullvad-browser-linux64-[YOUR_VERSION].tar.xf
->mv mullvad-browser ~/
->cd
->cd mullvad-browser
->./start-mullvad-browser-desktop --register-app
-
-Now you have mullvad browser registered in your applications
+And run
+```sh
+sudo apt update
+```
 
 -----------------------------------------
 
-REMOTELY HELP A USER
 
-to help from server to client
-install xrdp
-
->sudo apt update
->sudo apt install xrdp
->sudo systemctl status xrdp
-
-if it's not running, enable it
->sudo systemctl enable --now xrdp
-
-add xrdp user to ssl-cert group
->sudo adduser xrdp ssl-cert
-
-restart xrdp server
->sudo systemctl restart xrdp
-
-
-
-to help from client to client
-install remmina
-
->sudo apt install remmina
-
------------------------------------------
-
-INSTALL UNCOMPLICATED FIREWALL
-
-install ufw
-
->sudo apt install ufw
->sudo ufw allow 3389
->sudo ufw enable
-
------------------------------------------
-
-CONNECTING TO A MACHINE
-
-enabling bridged network type in virtualbox's vm settings
-
-you can then remotely connect to your workstation from another machine on the network
-
-to know your workstation's ip
->ip a
-
-it will probably look like 10.40.X.X
-
-YOU CANNOT LOGIN INTO AN ONGOING SESSION WITH XRPD, EITHER CREATE A GUEST USER OR LOGOUT AND TRY AGAIN
-
------------------------------------------
------------------------------------------
------------------------------------------
-
-# server vm setup
+# server vm setup - todo
 
 same setup as the workstation except during the step where you choose the desktop environment (GNOME, Xfce, etc..), deselect every environment and select webserver and SSH
 
