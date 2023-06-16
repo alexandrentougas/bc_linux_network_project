@@ -7,7 +7,7 @@ BeCode Linux Module - Linux Project
   - [Project Context](#project-context)
   - [Must Have](#must-have)
 - [Workstation VM Setup](#workstation-vm-setup)
-  - [__Steps__](#steps)
+  - [Steps](#steps)
     - [__1. Creating the New VM__](#1-creating-the-new-vm)
     - [__2. Installing Linux on the VM__](#2-installing-linux-on-the-vm)
     - [__3. Setting Up the VM__](#3-setting-up-the-vm)
@@ -60,7 +60,7 @@ Set up the following Linux infrastructure:
 
 We'll setup a debian virtual machine with a graphical desktop environment using VirtualBox.
 
-## __Steps__
+## Steps
 
 ### __1. Creating the New VM__
 
