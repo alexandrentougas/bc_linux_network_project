@@ -1,6 +1,30 @@
 # bc_linux_network_project
 BeCode Linux Module - Linux Project
 
+## Table of Contents
+- [bc\_linux\_network\_project](#bc_linux_network_project)
+  - [Table of Contents](#table-of-contents)
+  - [Project Context](#project-context)
+  - [Must Have](#must-have)
+- [Workstation VM Setup](#workstation-vm-setup)
+  - [Steps](#steps)
+    - [**1. Creating the New VM**](#1-creating-the-new-vm)
+    - [**2. Installing Linux on the VM**](#2-installing-linux-on-the-vm)
+    - [**3. Setting Up the VM**](#3-setting-up-the-vm)
+- [Server VM Setup](#server-vm-setup)
+  - [Steps](#steps-1)
+    - [1. Install sudo and add user to sudoers](#1-install-sudo-and-add-user-to-sudoers)
+    - [2. Setting up the firewall](#2-setting-up-the-firewall)
+    - [3. Setting server's IP](#3-setting-servers-ip)
+    - [4. Installing GLPI](#4-installing-glpi)
+    - [5. Setting up a DNS server](#5-setting-up-a-dns-server)
+    - [6. Setting up a DHCP server](#6-setting-up-a-dhcp-server)
+    - [7. Weekly Backup of Configurations](#7-weekly-backup-of-configurations)
+  - [Encountered Problems](#encountered-problems)
+    - [__On the Workstation__](#on-the-workstation)
+    - [__On the Server__](#on-the-server)
+  - [Useful Links](#useful-links)
+
 ## Project Context
 
 The local library in your little town has no funding for Windows licenses so the director is considering Linux. Some users are sceptical and ask for a demo. The local IT company where you work is taking up the project and you are in charge of setting up a server and a workstation.
@@ -206,7 +230,7 @@ Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridg
 
 You can now remotely connect to your workstation from another machine on the network
 
-To know your workstation's ip
+To know your workstation's IP
 ```sh
 ip a
 ```
@@ -217,42 +241,13 @@ It will probably be something like 10.40.X.X
 
 -----------------------------------------
 
-### Encoutered problems
+# Server VM Setup
 
-<ins>__"Media change: please insert the disc labeled ... in the drive /media/cdrom"__</ins>
-
-It can happen if you fed your machine the CD or DVD version of the ISO, to fix it you need to update your souces list.
-
-```sh
-sudo nano /etc/apt/sources.list
-```
-
-Delete or comment (#) the CDROM source and paste this:
-```
-deb http://deb.debian.org/debian bookworm main non-free-firmware
-deb-src http://deb.debian.org/debian bookworm main non-free-firmware
-
-deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware
-deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware
-
-deb http://deb.debian.org/debian bookworm-updates main non-free-firmware
-deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware
-```
-
-And run
-```sh
-sudo apt update
-```
-
------------------------------------------
-
-# Server VM Setup - TODO
-
-The VM creation and setup are pretty much the same as the Workstation's ones with one exception, deselect any desktop environment and select SSH and Web Server.
+The [server VM creation and setup](#1-creating-the-new-vm) are pretty much the same as the Workstation's ones with one exception, deselect any desktop environment and select SSH and Web Server.
 
 We'll start by setting our Network Adapter to Bridged in our VM, same as with the Workstation aswell.
 
-Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter
+<ins>Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter</ins>
 
 -----------------------------------------
 
@@ -352,7 +347,7 @@ sudo systemctl restart apache2
 ```sh
 sudo systemctl enable apache2
 ```
-If everything went according to plan, you should be able to access your GLPI interface by going to your machine's IP with a browser. To find the ip to go to, type:
+If everything went according to plan, you should be able to access your GLPI interface by going to your machine's IP with a browser. To find the IP to go to, type:
 
 ```sh
 ip a
@@ -369,7 +364,7 @@ Follow [this tutorial](https://computingforgeeks.com/configure-master-bind-dns-s
 A few important notes:
 
 * You can use nano instead of vim
-* In step 3, you can omit the mail exchanger config for the forward db and the PTR record ip for the reverse db
+* In step 3, you can omit the mail exchanger config for the forward db and the PTR record IP for the reverse db
 * In step 4 when restarting, enabling and checking your DNS, replace 'bind9' with 'named'
 * In step 5 when writing in the resolv.conf, put the line with nameserver SERVER_IP at the top ofthe file
 * Ignore step 6
@@ -429,7 +424,7 @@ subnet 10.40.0.0 netmask 255.255.0.0 {
         range 10.40.5.100 10.40.5.120;
 }
 ```
-<ins>__Do not include the ip of your own DHCP server, set a range above or below it__</ins>
+<ins>__Do not include the IP of your own DHCP server, set a range above or below it__</ins>
 
 Save and restart both VM's
 
@@ -449,73 +444,148 @@ You should be able to access your GLPI interface.
 
 -----------------------------------------
 
-BACKUPS + OPTIONAL - TO FINISH
+### 7. Weekly Backup of Configurations
 
-    Backups are placed on a partition located on separate disk, this partition must be mounted for the backup, then unmounted
-
-
-first you need to create a new volume for your vm
-
-1. close your vm
-2. on virtualbox, while your vm is selected, go to settings
-3. go to storage
-4. click on the little hard drive on the left of Controller:SATA
-5. create on the top left
-6. VDI
-7. next and then allocate the space you want (at least 5gb)
-8. select your new volume and click on choose
+    "Backups are placed on a partition located on separate disk, this partition must be mounted for the backup, then unmounted"
 
 
-you now have a new volume attached to your vm
+First we need to create a new volume for your VM.
 
-to check your disks on your vm, type
->lsblk
-if you see a /dev/sdb then your additional drive exists
+1. Shutdown your VM
+2. In VirtualBox, while your VM is selected, go to Settings
+3. Go to storage
+4. Click on the little hard drive on the left of "Controller:SATA"
+5. Create on the top left
+6. Leave VDI selected -> Next
+7. Allocate the space you want (at least 5GB)
+8. Select your new volume and click on "Choose"
 
-so we'll start by formatting it to ext4
->sudo mkfs.ext4 /dev/sdb
+You now have a new volume attached to your VM, to check your available disks on the VM, type
 
-we'll create a backup dir in /mnt
->sudo mkdir /mnt/conf_backups
+```sh
+lsblk
+```
 
-then we'll create a script to mount our disk and backup our conf files before unmounting it
+If you see a /dev/sdb then your additional drive exists.
 
->su root
->cd
->mkdir scripts
->nano /root/scripts/conf_backup.sh
+Format the new extra drive to ext4
+```sh
+sudo mkfs.ext4 /dev/sdb
+```
+Create a backup directory in /mnt
+```sh
+sudo mkdir /mnt/conf_backups
+```
 
+Fun part; writing a script to mount our disk and backup our configuration files before unmounting it
+
+```sh
+su root
+```
+```sh
+cd
+```
+```sh
+mkdir scripts
+```
+```sh
+nano /root/scripts/conf_backup.sh
+```
+
+Paste in
+
+```
 sudo mount /dev/sdb /mnt/conf_backups/
 sudo mkdir /tmp/$(date +%d-%b-%Y)
 sudo cp -r /etc/bind /etc/dhcp /etc/apache2 /etc/mysql /etc/php /etc/resolv.conf /tmp/$(date +%d-%b-%Y)/
 sudo tar -zcvf /mnt/conf_backups/$(date +%d-%b-%Y).tar.gz /tmp/$(date +%d-%b-%Y)/
 sudo rm -rf /tmp/$(date +%d-%b-%Y)
 sudo umount /dev/sdb
+```
 
-then we create a cronjob to launch the script every week on sunday at 9pm
->sudo crontab -u root -e
->00 21 * * 7 /root/scripts/conf_backup.sh
-
-IF THE SCRIPT ISNT EXECUTABLE BY ROOT (CREATED BY ROOT), MAKE SURE TO MAKE YOUR SCRIPT EXECUTABLE FOR ROOT
->sudo chmod 770 [PATH_TO_YOUR_SCRIPT]
-
------------------------------------------
-
-USEFUL LINKS
-
-rsyslog
-nmap
+Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script ever week on sunday at 9PM
+```sh
+sudo crontab -u root -e
+```
+```sh
+00 21 * * 7 /root/scripts/conf_backup.sh
+```
 
 -----------------------------------------
 
-TROUBLES ENCOUNTERED
+## Encountered Problems
 
-problem with debian 11 under gnome we can use this http://c-nergy.be/blog/?p=18918
+### __On the Workstation__
 
->wget https://c-nergy.be/downloads/xRDP/xrdp-installer-1.4.7.zip
->cd ~/Downloads
->unzip xrdp-installer-1.4.7.zip
->sudo chmod +x xrdp-installer-1.4.7.sh
->sh xrdp-installer-1.4.7.sh -c -l
+<ins>__"Media change: please insert the disc labeled ... in the drive /media/cdrom"__</ins>
 
+It can happen if you fed your machine the CD or DVD version of the ISO, to fix it you need to update your souces list.
+
+```sh
+sudo nano /etc/apt/sources.list
+```
+
+Delete or comment (#) the CDROM source and paste this:
+```
+deb http://deb.debian.org/debian bookworm main non-free-firmware
+deb-src http://deb.debian.org/debian bookworm main non-free-firmware
+
+deb http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware
+deb-src http://deb.debian.org/debian-security/ bookworm-security main non-free-firmware
+
+deb http://deb.debian.org/debian bookworm-updates main non-free-firmware
+deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware
+```
+
+And run
+```sh
+sudo apt update
+```
+
+### __On the Server__
+
+<ins>__Remmina connects to target and crashes shortly after (GNOME Desktop Environment)__</ins>
+
+Apparently being a version issue on debian 11, we can use [this] to fix it(http://c-nergy.be/blog/?p=18918)
+```sh
+wget https://c-nergy.be/downloads/xRDP/xrdp-installer-1.4.7.zip
+```
+```sh
+cd ~/Downloads
+```
+```sh
+unzip xrdp-installer-1.4.7.zip
+```
+```sh
+sudo chmod +x xrdp-installer-1.4.7.sh
+```
+```sh
+sh xrdp-installer-1.4.7.sh -c -l
+```
+
+<ins>__cronjob is running but script isn't executed__</ins>
+
+If the script isn't executable by the root group, make sure to fix that otherwise the cron will run but nothing will happen (if you created it with root, ignore)
+
+```sh
+sudo chmod 770 PATH_TO_YOUR_SCRIPT
+```
 -----------------------------------------
+
+## Useful Links
+
+[crontab.guru](https://crontab.guru/) to help you understand and configure a cronjob
+
+[Nmap](https://nmap.org/) to easily check what ports are open on your machine
+```sh
+sudo apt install nmap
+```
+```sh
+nmap localhost
+```
+
+[rsyslog](https://www.rsyslog.com/) to help you troubleshoot (practical for cron)
+```sh
+sudo apt install rsyslog
+```
+The logs are located in /var/logs/system by default
