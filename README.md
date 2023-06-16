@@ -20,10 +20,10 @@ BeCode Linux Module - Linux Project
     - [__5. Setting up a DNS server__](#5-setting-up-a-dns-server)
     - [__6. Setting up a DHCP server__](#6-setting-up-a-dhcp-server)
     - [__7. Weekly Backup of Configurations__](#7-weekly-backup-of-configurations)
-  - [Encountered Problems](#encountered-problems)
-    - [__On the Workstation__](#on-the-workstation)
-    - [__On the Server__](#on-the-server)
-  - [Useful Links](#useful-links)
+- [Encountered Problems](#encountered-problems)
+  - [__On the Workstation__](#on-the-workstation)
+  - [__On the Server__](#on-the-server)
+  - [__Useful Links__](#useful-links)
 
 ## Project Context
 
@@ -106,7 +106,7 @@ Don't scan for the extra installation media, select your mirror country, deb.deb
 
 Participate in the package survey if you wish.
 
-<ins>__For the Software Selection, select Debian desktop environment and select the environment that you like. I will be choosing GNOME and don't forget to tick SSH aswell__</ins> (spacebar to select and deselect)
+<ins>__For the Software Selection, select Debian desktop environment and select the environment that you like. I will be choosing GNOME and don't forget to tick SSH aswell.__</ins> (spacebar to select and deselect)
 
 ![](images/vm-creation-2.png)
 
@@ -168,13 +168,13 @@ cd mullvad-browser
 ./start-mullvad-browser-desktop --register-app
 ```
 
-Now you have mullvad browser registered in your applications
+Now you have mullvad browser registered in your applications.
 
 ---
 
 We'll also set up the remote help straight away since it's just some more installs.
 
-To be able to remotely connect to a user, we'll use xrdp ([RDP](https://en.wikipedia.org/wiki/Remote_Desktop_Protocol) stands for Remote Desktop Protocol)
+To be able to remotely connect to a user, we'll use xrdp. ([RDP](https://en.wikipedia.org/wiki/Remote_Desktop_Protocol) stands for Remote Desktop Protocol)
 
 
 ```sh
@@ -187,30 +187,27 @@ sudo apt install xrdp
 sudo systemctl status xrdp
 ```
 
-If it's not running, enable it
+If it's not running, enable it:
 ```sh
 sudo systemctl enable --now xrdp
 ```
 
-Add the xrdp user to the ssl-cert group
+Add the xrdp user to the ssl-cert group:
 ```sh
 sudo adduser xrdp ssl-cert
 ```
 
-Restart the xrdp server
+Restart the xrdp server:
 ```sh
 sudo systemctl restart xrdp
 ```
 
-We can also install Remmina to be able to help a user from another workstation
-install remmina
-
+We can also install Remmina to be able to help a user from another workstation:
 ```sh
 sudo apt install remmina
 ```
 
-We can already set up the Uncomplicated Firewall for the future and allow the RDP port
-
+We can already set up the Uncomplicated Firewall for the future and allow the RDP port:
 ```sh
 sudo apt install ufw
 ```
@@ -223,22 +220,23 @@ sudo ufw enable
 
 -----------------------------------------
 
-We'll try to remotely connect to another machine, for that we need to change our VM's network type and set it to Bridged
+We'll try to remotely connect to another machine, for that we need to change our VM's network type and set it to Bridged.
 
-Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter
+Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter.
 
 ![](images/vm-bridged-network.png)
 
-You can now remotely connect to your workstation from another machine on the network
+You can now remotely connect to your workstation from another machine on the network.
 
-To know your workstation's IP
+To know your workstation's IP:
 ```sh
 ip a
 ```
 
-It will probably be something like 10.40.X.X
+It will probably be something like 10.40.X.X.
 
-<ins>__You cannot connect remotely into a machine with an ongoing session with xrdp, either create a guest user or logout__</ins>
+
+<ins>__You cannot remotely connect into a machine with an ongoing session with xrdp, either create a guest user or logout.__</ins>
 
 -----------------------------------------
 
@@ -248,7 +246,7 @@ The [server VM creation and setup](#1-creating-the-new-vm) are pretty much the s
 
 We'll start by setting our Network Adapter to Bridged in our VM, same as with the Workstation aswell.
 
-<ins>Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter</ins>
+<ins>Shut down your VM, go to Settings > Network and in Adapter 1 switch NAT to Bridged Adapter.</ins>
 
 -----------------------------------------
 
@@ -256,8 +254,7 @@ We'll start by setting our Network Adapter to Bridged in our VM, same as with th
 
 ### __1. Install sudo and add user to sudoers__
 
-First step, install sudo and add your user to the sudoers group.
-
+First step, install sudo and add your user to the sudoers group:
 ```sh
 su root
 ```
@@ -271,7 +268,7 @@ usermod -aG sudo YOUR_USERNAME
 exit
 ```
 
-Test sudo and privilege
+Test sudo and privilege:
 ```sh
 sudo apt update
 ```
@@ -280,8 +277,7 @@ sudo apt update
 
 ### __2. Setting up the firewall__
 
-Then we'll install the Uncomplicated Firewall and set it up for the future.
-
+Then we'll install the Uncomplicated Firewall and set it up for the future:
 ```sh
 sudo apt install ufw
 ```
@@ -298,8 +294,7 @@ sudo ufw allow SSH,80,443,53
 
 ### __3. Setting server's IP__
 
-After that, we'll be setting a static IP to our server.
-
+After that, we'll be setting a static IP to our server:
 ```sh
 sudo apt install network-manager
 ```
@@ -307,18 +302,17 @@ sudo apt install network-manager
 sudo nano /etc/network/interfaces
 ```
 
-And comment out the lines (add # in front of the lines)
-
+And comment out the lines (add # in front of the lines):
 >#allow-hotplug enp0s3
 >
 >#iface enp0s3 inet dhcp
 
-The command to set a static IP, be cautious to replace the X's with the IP you want to assign to your server
+The command to set a static IP, be cautious to replace the X's with the IP you want to assign to your server:
 ```sh
 nmcli con mod "Wired connection 1" ipv4.addresses "10.40.X.X/16" ipv4.gateway "10.40.0.1" ipv4.dns "" ipv4.dns-search "" ipv4.method "manual"
 ```
 
-You now have a server with a static IP
+You now have a server with a static IP.
 
 -----------------------------------------
 
@@ -326,8 +320,7 @@ You now have a server with a static IP
 
 We'll use a convenient [little script](https://github.com/jr0w3/GLPI_install_script) that'll install and set up GLPI with and Apache2 server and a MardiaDB database.
 
-We'll have to give it the root privilege
-
+We'll have to give it the root privilege:
 ```sh
 su root
 ```
@@ -335,10 +328,9 @@ su root
 wget https://raw.githubusercontent.com/jr0w3/GLPI_install_script/main/glpi-install.sh && bash glpi-install.sh
 ```
 
-Follow the scripts instructions
+Follow the scripts instructions.
 
-When the script finishes doing its thing, we are supposed to restart apache2 but it wont work, so we run this
-
+When the script finishes doing its thing, we are supposed to restart apache2 but it wont work, so we run this:
 ```sh
 sudo ln -s /etc/apache2/mods-available/rewrite.load /etc/apache2/mods-enabled/rewrite.load
 ```
@@ -349,33 +341,31 @@ sudo systemctl restart apache2
 sudo systemctl enable apache2
 ```
 If everything went according to plan, you should be able to access your GLPI interface by going to your machine's IP with a browser. To find the IP to go to, type:
-
 ```sh
 ip a
 ```
 
-The default credentials for GLPI are glpi:glpi
+The default credentials for GLPI are glpi:glpi.
 
 -----------------------------------------
 
 ### __5. Setting up a DNS server__
 
-Follow [this tutorial](https://computingforgeeks.com/configure-master-bind-dns-server-on-debian/)
+Follow [this tutorial](https://computingforgeeks.com/configure-master-bind-dns-server-on-debian/).
 
 A few important notes:
 
-* You can use nano instead of vim
-* In step 3, you can omit the mail exchanger config for the forward db and the PTR record IP for the reverse db
-* In step 4 when restarting, enabling and checking your DNS, replace 'bind9' with 'named'
-* In step 5 when writing in the resolv.conf, put the line with nameserver SERVER_IP at the top of the file
-* Ignore step 6
+* You can use nano instead of vim.
+* In step 3, you can omit the mail exchanger config for the forward db and the PTR record IP for the reverse db.
+* In step 4 when restarting, enabling and checking your DNS, replace 'bind9' with 'named'.
+* In step 5 when writing in the resolv.conf, put the line with nameserver SERVER_IP at the top ofthe file.
+* Ignore step 6.
 
 -----------------------------------------
 
 ### __6. Setting up a DHCP server__
 
-First we install it.
-
+First we install it:
 ```sh
 sudo apt install isc-dhcp-server
 ```
@@ -383,13 +373,11 @@ sudo apt install isc-dhcp-server
 sudo nano /etc/default/isc-dhcp-server
 ```
 
-Replace the last 2 lines with
-
+Replace the last 2 lines with:
 >INTERFACESv4="enp0s3"  
 >#INTERFACESv6=""
 
-Then we configure the DHCP
-
+Then we configure the DHCP:
 ```sh
 sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.old
 ```
@@ -397,8 +385,7 @@ sudo cp /etc/dhcp/dhcpd.conf /etc/dhcp/dhcpd.conf.old
 sudo nano /etc/dhcp/dhcpd.conf
 ```
 
-Paste in this config
-
+Paste in this config:
 ```
 default-lease-time 600;
 max-lease-time 7200;
@@ -419,22 +406,21 @@ subnet 10.40.0.0 netmask 255.255.0.0 {
 ```
 
 For the subnet mask range it is suggested you choose a small range for easier testing, i.e:
-
 ```
 subnet 10.40.0.0 netmask 255.255.0.0 {
         range 10.40.5.100 10.40.5.120;
 }
 ```
-<ins>__Do not include the IP of your own DHCP server, set a range above or below it__</ins>
+<ins>__Do not include the IP of your own DHCP server, set a range above or below it.__</ins>
 
-Save and restart both VM's
+Save and restart both VM's.
 
-To verify that it's working proprely, __on your workstation__, run
+To verify that it's working proprely, __on your workstation__, run:
 ```sh
 sudo dhclient -v
 ```
 
-You should see a line like this
+You should see a line like this:
 >DHCPOFFER of YOUR_NEW_IP from YOUR_SERVER_IP
 
 ![](images/dhcp-test.png)
@@ -447,39 +433,34 @@ You should be able to access your GLPI interface.
 
 ### __7. Weekly Backup of Configurations__
 
-    "Backups are placed on a partition located on separate disk, this partition must be mounted for the backup, then unmounted"
-
-
 First we need to create a new volume for your VM.
 
-1. Shutdown your VM
-2. In VirtualBox, while your VM is selected, go to Settings
-3. Go to storage
-4. Click on the little hard drive on the left of "Controller:SATA"
-5. Create on the top left
-6. Leave VDI selected -> Next
-7. Allocate the space you want (at least 5GB)
-8. Select your new volume and click on "Choose"
+1. Shutdown your VM.
+2. In VirtualBox, while your VM is selected, go to Settings.
+3. Go to storage.
+4. Click on the little hard drive on the left of "Controller:SATA".
+5. Create on the top left.
+6. Leave VDI selected -> Next.
+7. Allocate the space you want (at least 5GB).
+8. Select your new volume and click on "Choose".
 
-You now have a new volume attached to your VM, to check your available disks on the VM, type
-
+You now have a new volume attached to your VM, to check your available disks on the VM, type:
 ```sh
 lsblk
 ```
 
 If you see a /dev/sdb then your additional drive exists.
 
-Format the new extra drive to ext4
+Format the new extra drive to ext4:
 ```sh
 sudo mkfs.ext4 /dev/sdb
 ```
-Create a backup directory in /mnt
+Create a backup directory in /mnt:
 ```sh
 sudo mkdir /mnt/conf_backups
 ```
 
-Fun part; writing a script to mount our disk and backup our configuration files before unmounting it
-
+Fun part; writing a script to mount our disk and backup our configuration files before unmounting it:
 ```sh
 su root
 ```
@@ -493,8 +474,7 @@ mkdir scripts
 nano /root/scripts/conf_backup.sh
 ```
 
-Paste in
-
+Paste in:
 ```
 sudo mount /dev/sdb /mnt/conf_backups/
 sudo mkdir /tmp/$(date +%d-%b-%Y)
@@ -504,19 +484,20 @@ sudo rm -rf /tmp/$(date +%d-%b-%Y)
 sudo umount /dev/sdb
 ```
 
-Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script every week on sunday at 9PM
+Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script every week on sunday at 9PM.
+
 ```sh
 sudo crontab -u root -e
 ```
-```sh
+```
 00 21 * * 7 /root/scripts/conf_backup.sh
 ```
 
 -----------------------------------------
 
-## Encountered Problems
+# Encountered Problems
 
-### __On the Workstation__
+## __On the Workstation__
 
 <ins>__"Media change: please insert the disc labeled ... in the drive /media/cdrom"__</ins>
 
@@ -538,16 +519,16 @@ deb http://deb.debian.org/debian bookworm-updates main non-free-firmware
 deb-src http://deb.debian.org/debian bookworm-updates main non-free-firmware
 ```
 
-And run
+And run:
 ```sh
 sudo apt update
 ```
 
-### __On the Server__
+## __On the Server__
 
 <ins>__Remmina connects to target and crashes shortly after (GNOME Desktop Environment)__</ins>
 
-Apparently being a version issue of xrdp on debian 11, we can use [this] to fix it(http://c-nergy.be/blog/?p=18918)
+Apparently being a version issue of xrdp on debian 11, we can use [this](http://c-nergy.be/blog/?p=18918) to fix it:
 ```sh
 sudo apt remove xrdp
 ```
@@ -569,18 +550,18 @@ sh xrdp-installer-1.4.7.sh -c -l
 
 <ins>__cronjob is running but script isn't executed__</ins>
 
-If the script isn't executable by the root group, make sure to fix that otherwise the cron will run but nothing will happen (if you created it with root, ignore)
+If the script isn't executable by the root group, make sure to fix that otherwise the cron will run but nothing will happen. (if you created it with root, ignore)
 
 ```sh
 sudo chmod 770 PATH_TO_YOUR_SCRIPT
 ```
 -----------------------------------------
 
-## Useful Links
+## __Useful Links__
 
-[crontab.guru](https://crontab.guru/) to help you understand and configure a cronjob
+[crontab.guru](https://crontab.guru/) to help you understand and configure a cronjob.
 
-[Nmap](https://nmap.org/) to easily check what ports are open on your machine
+[Nmap](https://nmap.org/) to easily check what ports are open on your machine.
 ```sh
 sudo apt install nmap
 ```
@@ -588,8 +569,8 @@ sudo apt install nmap
 nmap localhost
 ```
 
-[rsyslog](https://www.rsyslog.com/) to help you troubleshoot (practical for cron)
+[rsyslog](https://www.rsyslog.com/) to help you troubleshoot. (practical for cron)
 ```sh
 sudo apt install rsyslog
 ```
-The logs are located in /var/logs/system by default
+The logs are located in /var/logs/system by default.
