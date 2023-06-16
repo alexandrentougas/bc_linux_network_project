@@ -144,6 +144,7 @@ sudo apt install gimp
 
 [MULLVAD Browser](https://mullvad.net/en/download/browser/linux)
 
+Download it from their website.
 
 ```sh
 cd Downloads
@@ -234,7 +235,8 @@ ip a
 
 It will probably be something like 10.40.X.X.
 
-<ins>__You cannot remotely into a machine with an ongoing session with xrdp, either create a guest user or logout.__</ins>
+
+<ins>__You cannot remotely connect into a machine with an ongoing session with xrdp, either create a guest user or logout.__</ins>
 
 -----------------------------------------
 
@@ -482,7 +484,8 @@ sudo rm -rf /tmp/$(date +%d-%b-%Y)
 sudo umount /dev/sdb
 ```
 
-Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script ever week on sunday at 9PM.
+Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script every week on sunday at 9PM.
+
 ```sh
 sudo crontab -u root -e
 ```
@@ -525,7 +528,10 @@ sudo apt update
 
 <ins>__Remmina connects to target and crashes shortly after (GNOME Desktop Environment)__</ins>
 
-Apparently being a version issue on debian 11, we can use [this](http://c-nergy.be/blog/?p=18918) to fix it:
+Apparently being a version issue of xrdp on debian 11, we can use [this](http://c-nergy.be/blog/?p=18918) to fix it:
+```sh
+sudo apt remove xrdp
+```
 ```sh
 wget https://c-nergy.be/downloads/xRDP/xrdp-installer-1.4.7.zip
 ```
