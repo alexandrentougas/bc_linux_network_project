@@ -144,6 +144,7 @@ sudo apt install gimp
 
 [MULLVAD Browser](https://mullvad.net/en/download/browser/linux)
 
+Download it from their website.
 
 ```sh
 cd Downloads
@@ -237,7 +238,7 @@ ip a
 
 It will probably be something like 10.40.X.X
 
-<ins>__You cannot remotely into a machine with an ongoing session with xrdp, either create a guest user or logout__</ins>
+<ins>__You cannot connect remotely into a machine with an ongoing session with xrdp, either create a guest user or logout__</ins>
 
 -----------------------------------------
 
@@ -366,7 +367,7 @@ A few important notes:
 * You can use nano instead of vim
 * In step 3, you can omit the mail exchanger config for the forward db and the PTR record IP for the reverse db
 * In step 4 when restarting, enabling and checking your DNS, replace 'bind9' with 'named'
-* In step 5 when writing in the resolv.conf, put the line with nameserver SERVER_IP at the top ofthe file
+* In step 5 when writing in the resolv.conf, put the line with nameserver SERVER_IP at the top of the file
 * Ignore step 6
 
 -----------------------------------------
@@ -503,7 +504,7 @@ sudo rm -rf /tmp/$(date +%d-%b-%Y)
 sudo umount /dev/sdb
 ```
 
-Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script ever week on sunday at 9PM
+Then we create a [cronjob](https://en.wikipedia.org/wiki/Cron) to launch the script every week on sunday at 9PM
 ```sh
 sudo crontab -u root -e
 ```
@@ -546,7 +547,10 @@ sudo apt update
 
 <ins>__Remmina connects to target and crashes shortly after (GNOME Desktop Environment)__</ins>
 
-Apparently being a version issue on debian 11, we can use [this] to fix it(http://c-nergy.be/blog/?p=18918)
+Apparently being a version issue of xrdp on debian 11, we can use [this] to fix it(http://c-nergy.be/blog/?p=18918)
+```sh
+sudo apt remove xrdp
+```
 ```sh
 wget https://c-nergy.be/downloads/xRDP/xrdp-installer-1.4.7.zip
 ```
