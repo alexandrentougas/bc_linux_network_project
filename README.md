@@ -23,7 +23,7 @@ BeCode Linux Module - Linux Project
 - [Encountered Problems](#encountered-problems)
   - [__On the Workstation__](#on-the-workstation)
   - [__On the Server__](#on-the-server)
-  - [Useful Links](#useful-links)
+  - [__Useful Links__](#useful-links)
 
 ## Project Context
 
@@ -551,7 +551,7 @@ sudo chmod 770 PATH_TO_YOUR_SCRIPT
 ```
 -----------------------------------------
 
-## Useful Links
+## __Useful Links__
 
 [crontab.guru](https://crontab.guru/) to help you understand and configure a cronjob.
 
