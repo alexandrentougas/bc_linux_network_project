@@ -7,19 +7,19 @@ BeCode Linux Module - Linux Project
   - [Project Context](#project-context)
   - [Must Have](#must-have)
 - [Workstation VM Setup](#workstation-vm-setup)
-  - [Steps](#steps)
-    - [**1. Creating the New VM**](#1-creating-the-new-vm)
-    - [**2. Installing Linux on the VM**](#2-installing-linux-on-the-vm)
-    - [**3. Setting Up the VM**](#3-setting-up-the-vm)
+  - [__Steps__](#steps)
+    - [__1. Creating the New VM__](#1-creating-the-new-vm)
+    - [__2. Installing Linux on the VM__](#2-installing-linux-on-the-vm)
+    - [__3. Setting Up the VM__](#3-setting-up-the-vm)
 - [Server VM Setup](#server-vm-setup)
   - [Steps](#steps-1)
-    - [1. Install sudo and add user to sudoers](#1-install-sudo-and-add-user-to-sudoers)
-    - [2. Setting up the firewall](#2-setting-up-the-firewall)
-    - [3. Setting server's IP](#3-setting-servers-ip)
-    - [4. Installing GLPI](#4-installing-glpi)
-    - [5. Setting up a DNS server](#5-setting-up-a-dns-server)
-    - [6. Setting up a DHCP server](#6-setting-up-a-dhcp-server)
-    - [7. Weekly Backup of Configurations](#7-weekly-backup-of-configurations)
+    - [__1. Install sudo and add user to sudoers__](#1-install-sudo-and-add-user-to-sudoers)
+    - [__2. Setting up the firewall__](#2-setting-up-the-firewall)
+    - [__3. Setting server's IP__](#3-setting-servers-ip)
+    - [__4. Installing GLPI__](#4-installing-glpi)
+    - [__5. Setting up a DNS server__](#5-setting-up-a-dns-server)
+    - [__6. Setting up a DHCP server__](#6-setting-up-a-dhcp-server)
+    - [__7. Weekly Backup of Configurations__](#7-weekly-backup-of-configurations)
   - [Encountered Problems](#encountered-problems)
     - [__On the Workstation__](#on-the-workstation)
     - [__On the Server__](#on-the-server)
@@ -60,9 +60,9 @@ Set up the following Linux infrastructure:
 
 We'll setup a debian virtual machine with a graphical desktop environment using VirtualBox.
 
-## Steps
+## __Steps__
 
-### **1. Creating the New VM**
+### __1. Creating the New VM__
 
 First we need a debian ISO, you can get yours [here](https://www.debian.org/distrib/), I will be using the latest release, debian 12.
 
@@ -80,7 +80,7 @@ Finish.
 
 ---
 
-### **2. Installing Linux on the VM**
+### __2. Installing Linux on the VM__
 
 A basic linux installation, I will choose the "Install" option, it's more convenient for me than the gaphical install.
 
@@ -112,7 +112,7 @@ Participate in the package survey if you wish.
 
 ---
 
-### **3. Setting Up the VM**
+### __3. Setting Up the VM__
 
 Once your machine is turned on, the first thing we have to do is add your user to the sudoers.
 
@@ -253,7 +253,7 @@ We'll start by setting our Network Adapter to Bridged in our VM, same as with th
 
 ## Steps
 
-### 1. Install sudo and add user to sudoers
+### __1. Install sudo and add user to sudoers__
 
 First step, install sudo and add your user to the sudoers group.
 
@@ -277,7 +277,7 @@ sudo apt update
 
 -----------------------------------------
 
-### 2. Setting up the firewall
+### __2. Setting up the firewall__
 
 Then we'll install the Uncomplicated Firewall and set it up for the future.
 
@@ -295,7 +295,7 @@ sudo ufw allow SSH,80,443,53
 
 -----------------------------------------
 
-### 3. Setting server's IP
+### __3. Setting server's IP__
 
 After that, we'll be setting a static IP to our server.
 
@@ -321,7 +321,7 @@ You now have a server with a static IP
 
 -----------------------------------------
 
-### 4. Installing GLPI
+### __4. Installing GLPI__
 
 We'll use a convenient [little script](https://github.com/jr0w3/GLPI_install_script) that'll install and set up GLPI with and Apache2 server and a MardiaDB database.
 
@@ -357,7 +357,7 @@ The default credentials for GLPI are glpi:glpi
 
 -----------------------------------------
 
-### 5. Setting up a DNS server
+### __5. Setting up a DNS server__
 
 Follow [this tutorial](https://computingforgeeks.com/configure-master-bind-dns-server-on-debian/)
 
@@ -371,7 +371,7 @@ A few important notes:
 
 -----------------------------------------
 
-### 6. Setting up a DHCP server
+### __6. Setting up a DHCP server__
 
 First we install it.
 
@@ -444,7 +444,7 @@ You should be able to access your GLPI interface.
 
 -----------------------------------------
 
-### 7. Weekly Backup of Configurations
+### __7. Weekly Backup of Configurations__
 
     "Backups are placed on a partition located on separate disk, this partition must be mounted for the backup, then unmounted"
 
